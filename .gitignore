@@ -1,4 +1,4 @@
 run.sh
 
 # Jupyter notebook checkpoints
-src/.ipynb_checkpoints
+.ipynb_checkpoints/

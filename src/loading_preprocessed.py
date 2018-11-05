@@ -6,7 +6,7 @@ input_data = {}
 
 for file_name in input_files_name:
     print(file_name)
-    input_data[file_name] = pd.read_csv('../data/preprocessed/' + file_name + '.csv')
+    input_data[file_name] = pd.read_csv('../data/preprocessed/merged/' + file_name + '.csv')
 
 n_nan = 0
 

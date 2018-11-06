@@ -1,2 +1,5 @@
 numpy==1.15.2
 pandas==0.22.0
+tensorflow
+keras
+sklearn

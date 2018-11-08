@@ -33,3 +33,21 @@ The datasets are located here: https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes
     * Model selection + performance
     * From result: Variable ranking -> addressing discrimination
 * Phase 2
+
+
+## Task assignments
+
+### Presentation Outline
+* Problems Definition: Keith
+* Process of working (draw some graph desc what we do to achieve our goal ): Keith
+* **NOT IN SLIDE** Columns dictionary (format: id, name, dictionary of value and its meaning)
+* EDA:
+  * Medications: Tri
+  * Diseases: Sasu
+* Models:
+  * Neural Network: Sasu
+  * Others: Tri
+* EDA: Model result
+  * Assessing model result bias: Tri (Need help from Sasu: NN result)
+  * Twin test: Sasu
+* Law: Aapo

@@ -1,0 +1,26 @@
+ColumnCode,ColumnName,Description,Details
+RIAGENDR,Gender,Gender of the participant,"{1: Male, 2: Female}"
+RIDAGEYR,Age,Age in years at screening,Range of values (80 = 80 or older)
+RIDRETH1,RaceNoAsian,"Recode of reported race and Hispanic origin information, missing asian category","{1: Mexican, 2: Other Hispanic, 3: Non-Hispanic White, 4: Black, 5: Other}"
+RIDRETH3,Race,"Recode of reported race and Hispanic origin information, with Non-Hispanic Asian Category","{1: Mexican, 2: Other Hispanic, 3: Non-Hispanic White, 4: Black, 6: Asian, 7: Other}"
+DMQMILIZ,ActiveDuty,Served Activity Duty in US Armed Forces,"{1: Yes, 2: Yes, 7: Refused, 9: Don't Know}"
+DMQADFC,ForeignService,Served in a foreign country,"{1: Yes, 2: Yes, 7: Refused, 9: Don't Know}"
+DMDBORN4,CountryOfBirth,Country of birth,"{1: U.S., 2: Others, 77: Refused, 99: Don't Know}"
+DMDCITZN,CitizenshipStatus,Citizenship status,"{1: Citizen, 2: Not a citizen, 7: Refused, 9: Don't Know}"
+DMDEDUC3,EducationLevelChild,Education Level for Child,"{0: Kindergarten Only, 1: 1st Grade, 2: 2nd Grade, 3: 3rd Grade, 4: 4th Grade, 5: 5th Grade, 6: 6th Grade, 7: 7th Grade, 8: 8th Grade,  9: 9th Grade, 10: 10th Grade, 11: 11th Grade, 12: 12th Grade, 13: High School Graduate, 14: GED, 15: More than high school, 55: Less than 5th grade, 66: Less than 9th grade, 77: Refused, 99: Don't Know}
+ "
+DMDEDUC2,EducationLevelAdult,Education Level for Adults,"{1: Less than 9th grade, 2: 9-12th grade no diploma, 3: High school graduate/GED, 4: Some college or AA degree, 5: College graduate or above, 7: Refused, 9: Don't Know}"
+DMDMARTL,MaritalStatus,Marital Status,"{1: Married, 2: Widowed, 3: Divorced, 4: Separated, 5: Never married, 6: Living with partner, 77: Refused, 99: Don't know}"
+RIDEXPRG,PregnancyStatus,Pregnancy Status at time of exam,"{1: Pregnant, 2: Not Pregnant, 3: Cannot Determine}"
+SIALANG,SPLanguage,Language of SP interview,"{1: English, 2: Spanish}"
+SIAINTRP,SPInterpreterUsed,Interpreter used in SP interview?,"{1: Yes, 2: No}"
+FIALANG,FILanguage,Language of Family interview,"{1: English, 2: Spanish}"
+FIAINTRP,FIInterpreterUsed,Interpreter used in Family interview?,"{1: Yes, 2: No}"
+MIALANG,MECLanguage,Language of MEC interview,"{1: English, 2: Spanish}"
+MIAINTRP,MECInterpreterUsed,Interpreter used in MEC interview?,"{1: Yes, 2: No}"
+AIALANGA,ACASILanguage,Language of ACASI interview,"{1: English, 2: Spanish, 3: Asian languages}"
+DMDHRGND,HHRefGender,HH Ref Person's Gender,"{1: Male, 2: Female}"
+DMDHRBR4,HHRefCountryOfBirth,HH reference person's country of birth,"{1: U..S., 2: Others, 77: Refused, 99: Don't Know}"
+INDHHIN2,HHAnnualIncome,Annual Household Income,"{1: Less than 5000, 2: 5000 to 9999, 3: 10000 to 14999, 4: 15000 to 19999, 5: 20000 to 24999, 6: 25000 to 34999, 7: 35000 to 44999, 8: 45000 to 54999, 9: 55000 to 64999, 10: 65000 to 74999, 12: 20000 and over, 13: Under 20000, 14: 75000 to 99999, 15: 100000 and over, 77: Refused, 99: Don't Know"
+INDFMIN2,FMAnnualIncome,Annual Family Income,"{1: Less than 5000, 2: 5000 to 9999, 3: 10000 to 14999, 4: 15000 to 19999, 5: 20000 to 24999, 6: 25000 to 34999, 7: 35000 to 44999, 8: 45000 to 54999, 9: 55000 to 64999, 10: 65000 to 74999, 12: 20000 and over, 13: Under 20000, 14: 75000 to 99999, 15: 100000 and over, 77: Refused, 99: Don't Know"
+INDFMPIR,PovertyRatio,Ratio of family income to poverty,Range of Values (5 = 5 or greater)

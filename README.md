@@ -17,8 +17,9 @@ https://docs.google.com/presentation/d/1XwYDCGykdkC_bsizkPG1gE8mvAsWF5nmbFIKKd-S
     * Data: Discrimination Variable
     * Model: Discrimination Measurement
 
-### Presentation Second Round:
-  * DS perspective: Try to remove Discrimination
+### Presentation Second Round: (04/12)
+  * Remind about our case
+  * DS perspective: Solution - Try to remove Discrimination
   * Legal perspective: Move from internal consultant to external (?)
 
 

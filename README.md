@@ -5,6 +5,9 @@ The datasets are located here: https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes
 ## Presentation
 https://docs.google.com/presentation/d/1XwYDCGykdkC_bsizkPG1gE8mvAsWF5nmbFIKKd-SN-U/edit?usp=sharing
 
+## Presentation round 2
+https://docs.google.com/presentation/d/1aMs4AZKc6aKlPv5j4TGfJYZWshl_0EJBwC7qS3_al2E/edit?usp=sharing
+
 ## Goals
 
 ### Reminder: Presentation round is mandatory meeting that counts toward Pass/Fail

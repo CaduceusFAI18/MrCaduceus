@@ -5,9 +5,22 @@ disease = ['Dental Care', 'Hypertension', 'HighCholesterol', 'Overweight', 'Arth
 performance_knn = [0.50, 0.49, 0.5, 0.54, 0.59, 0.64, 0.67]
 performance_rf = [0.5, 0.52, 0.51, 0.52, 0.59, 0.63, 0.65]
 
+performance_rf_tree_based_fs = [0.49, 0.49, 0.51, 0.57, 0.65, 0.70, 0.71]
+performance_rf_lsvc_fs = [0.52, 0.51, 0.50, 0.59, 0.65, 0.70, 0.71]
+
 
 plt.plot( disease, performance_knn, marker='o', markerfacecolor='blue', markersize=10, color='cyan', linewidth=4, label='KNN')
 plt.plot( disease, performance_rf, marker='^', color='darkviolet', markersize=10, linewidth=2, label='Random Forest')
+plt.xlabel('Diease')
+plt.ylabel('F1 score')
+plt.title('Most common dieases separate classifer performance')
+plt.legend(fancybox=True)
+plt.show()
+
+
+plt.plot( disease, performance_rf, marker='o', markerfacecolor='blue', markersize=10, color='cyan', linewidth=4, label='RF')
+plt.plot( disease, performance_rf_tree_based_fs, marker='^', color='darkviolet', markersize=10, linewidth=2, label='RF with Tree-based feature selection')
+plt.plot( disease, performance_rf_lsvc_fs, marker='^', color='salmon', markersize=10, linewidth=2, label='RF with linear SVC')
 plt.xlabel('Diease')
 plt.ylabel('F1 score')
 plt.title('Most common dieases separate classifer performance')

@@ -30,25 +30,15 @@ plt.title('Most common diseases separate classifier performance with KNN')
 plt.legend(fancybox=True)
 plt.show()
 
-# plt.plot(performance_rf, marker='o', )
 
-# model_most_common = ['Random Forest(max_depth = 50)', 'KNN(neighbor = 5)', 'Neural Network']
-# performance_most_common = [0.30, 0.29, 0.57]
-# error_most_common = [0.03, 0.06, 0.05]
+disease = ['Dental Care', 'Hypertension', 'HighCholesterol', 'Overweight', 'Arthritis', 'GenericProblem', 'SinusInfection']
+performance_rf = [0.49, 0.49, 0.49, 0.53, 0.58, 0.64, 0.65]
+performance_rf_no_age_corr_vars = [0.52, 0.49, 0.51, 0.51, 0.58, 0.63, 0.65]
 
-# plt.rcParams.update({'font.size': 16})
-# plt.xlabel('Model')
-# plt.ylabel('F1 score')
-# plt.errorbar(model, performance, error, linestyle='None', marker='^')
-# plt.title('Models\' performance')
-# plt.plot()
-# plt.show()
-
-
-
-# plt.xlabel('Model')
-# plt.ylabel('F1 score')
-# plt.errorbar(model_most_common, performance_most_common, error_most_common, linestyle='None', marker='^')
-# plt.title('Models\' performance for most common disease')
-# plt.plot()
-# plt.show()
+plt.plot(disease, performance_rf, marker='o', markersize=10, color='deepskyblue', linewidth=2, label='RF All Variables')
+plt.plot(disease, performance_rf_no_age_corr_vars, marker='^', color='darkviolet', markersize=10, linewidth=2, label='RF No Age and Age\'s Correlated Variables ')
+plt.xlabel('Disease')
+plt.ylabel('F1 score')
+plt.title('Most common diseases separate classifier performance with RF')
+plt.legend(fancybox=True)
+plt.show()

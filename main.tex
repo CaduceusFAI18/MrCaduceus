@@ -9,6 +9,7 @@
 \usepackage{subfigure}
 \usepackage{dirtytalk}
 \usepackage{float}
+\usepackage[toc,page]{appendix}
 
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
@@ -38,10 +39,10 @@ Tri Nguyen}
 \institute{University of Helsinki, Helsinki 00560, FI \\
 \email{firstname.lastname@helsinki.fi}\\}
 
-\maketitle              % typeset the header of the contribution
+\maketitle             
 %
 \begin{abstract}
-Fusce mauris tellus, auctor at ante commodo, facilisis euismod justo. Maecenas consectetur, ligula ut cursus egestas, lorem sapien sagittis elit, eu tempus massa leo sit amet turpis. Sed urna felis, vestibulum efficitur condimentum ut, volutpat eu arcu. Proin tortor augue, consequat vitae interdum sed, gravida vel odio. Quisque tempor et ex ac venenatis. Integer viverra mollis sem et egestas. Morbi quam velit, euismod sed elementum in, euismod quis purus.
+Finland's healthcare system is primarily supported by a healthcare tax, based on annual income, that is collected from working Finns. Currently, this method of taxation does not reward individuals who live a healthier lifestyle than their less active, less healthy peers. Mr. Caduceus is a proposed solution that seeks to adjust the taxation system so that individuals' perceived levels of health will also be taken into consideration. This report explains how Mr. Caduceus was built, methods used to implement fairness-aware machine learning, and the legality of the system.
 
 \keywords{healthcare, health tech, fairness aware ai, machine learning}
 \end{abstract}
@@ -49,25 +50,155 @@ Fusce mauris tellus, auctor at ante commodo, facilisis euismod justo. Maecenas c
 %
 %
 \section{Introduction}
-Aenean fringilla dolor eu massa cursus, a condimentum ligula bibendum. Vivamus a ipsum varius diam pulvinar aliquet. Nam cursus nulla sit amet libero congue eleifend. Proin sit amet dolor tincidunt tellus efficitur dignissim non consectetur arcu. Integer convallis felis a elit finibus malesuada. Donec semper quam vel libero rhoncus, eu placerat eros dignissim. Donec sit amet venenatis risus.
+Given an array of health data for a patient, including the a list of diseases or medical conditions they are suffering from, it is possible to predict the likelihood of diseases for other patients for which similar data is available. While the morality of taxing the sick and the elderly \textit{more} than their healthier and (often) younger counterparts is worth seriously questioning, such a discussion is outside the scope of this paper. The intention of this project was to confirm our hypothesis that, given enough medical data, one can simply train a classifier to predict medical conditions. Additionally, could we construct such a classifier so that it does not unfairly discriminate against healthy individuals based on protected variables or attributes. All figures for this report are available in the appendix.
 
 \section{Data}
-Morbi sagittis enim diam, vitae molestie nunc ultrices nec. Ut id mi a massa pellentesque aliquet non ac mauris. In laoreet sem eget leo ullamcorper finibus. Integer ac pharetra ex. Integer sapien neque, mattis sit amet nisl sed, commodo vestibulum nibh. Nullam efficitur massa non elit accumsan, ut malesuada nulla congue. Proin non arcu sit amet ante bibendum porta eget at felis. Pellentesque in tincidunt lorem. Vivamus feugiat, turpis eget suscipit vulputate, quam nulla luctus enim, faucibus porttitor urna urna sed turpis. Integer aliquet, erat vel euismod viverra, risus orci consectetur nibh, sed accumsan purus neque a mauris. Sed pellentesque metus sed efficitur blandit.
+The dataset used comes from the 2014 National Health and Nutrition Examination Survey, as conducted by the National Center for Health Statistics in the United States. The survey data includes interviews regarding patient demographics, nutritional profile, health history, as well as the results of physical examinations, laboratory tests, and medication profiles, linked to a unique patient ID. It contains over 10K unique patient IDs.
 
-\section{Models}
-Mauris gravida, orci non maximus pellentesque, dui augue fermentum diam, in condimentum metus dolor consequat ante. Proin eu enim tristique, posuere ex id, sagittis justo. Phasellus eget laoreet arcu. Vestibulum dapibus interdum nunc ac tempus. Phasellus at imperdiet neque, luctus bibendum turpis. Nunc vulputate enim id interdum egestas. Donec dictum enim aliquet, mattis velit quis, pretium ligula. Nunc semper a est nec molestie. Aenean ut sodales purus, vitae consectetur mauris. Etiam quis arcu eget neque finibus vehicula. Proin et tortor eu enim varius sollicitudin et interdum orci.
+First, the data had to be transformed to suit the purposes of this project.  The different inputs (demography, medication, labs, diet) were joined together, grouped into a patient profile (by ID). Structured in this way, each row represents a unique patient, and each column represents a variable related to some medical information. Disease status was inferred using the responses of certain questions, as in Fig. \ref{fig:image_0}.
 
-\section{Legal Constraints}
-Donec sapien dolor, tempor at vehicula in, varius quis purus. Vivamus ac erat metus. Vivamus a egestas ipsum. Mauris fermentum massa tortor, vitae dictum nunc fermentum at. Nullam non mi non erat lobortis tempus. Nam sollicitudin fringilla vestibulum. Praesent nisl lectus, iaculis vitae scelerisque ac, pellentesque at ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam vehicula lacinia est, sed tristique tellus placerat in. Maecenas nisi leo, vestibulum vel porttitor lobortis, vestibulum eget ante. Nullam accumsan erat risus, quis porta eros scelerisque ac. Integer consectetur molestie enim, non sodales justo gravida sit amet. Nulla et malesuada eros, in auctor sapien. Sed id lacus nibh. Fusce lorem quam, sagittis eu dui rhoncus, iaculis laoreet neque.
+ Approximately 200 columns were used to encode for 169 different diseases, with \say{Yes} responses indicating a patient had a given disease, and all other responses indicating the opposite. The indicator columns were then dropped from the dataset. The resulting data was saved as our \say{disease indicator} dataset. The pipeline is depicted in Fig. \ref{fig:image_9}. Next, the raw inputs were again combined, and columns with more than 35\% blank were removed. After this, rows with more than 50\% blank were dropped. For the remaining observations, we replaced blank observations with the column mean (for integer columns) and \say{no category} for category columns. This data was saved as our \say{patient data} dataset. This process is depicted in Fig. \ref{fig:data_preprocessing}.
+ 
+An exploratory analysis of the data was then conducted. We found that a majority of patients suffered from at least one illness or medical condition (see Fig. \ref{fig:patient_disease_profile}), and that the most common ailments were chronic conditions (see Fig. \ref{fig:common_diseases}). Patients were generally older and female; the patient dataset contained approximately 750 more women than men (see Fig. \ref{fig:age}). As is expected, the prevalences of diseases over time increases as patients age (see Fig. \ref{fig:age_disease}).
 
-Aenean tincidunt facilisis sodales. Etiam quam est, rhoncus sed suscipit vehicula, porta ut libero. Nullam gravida varius leo id consectetur. Nulla id elementum nisl, vel bibendum felis. Morbi blandit turpis eu quam viverra, pharetra porttitor nulla vestibulum. Sed convallis convallis vulputate. Vivamus congue lorem libero, quis gravida risus euismod non. Suspendisse potenti. Phasellus a volutpat est. In feugiat justo neque, non commodo lectus hendrerit ac. Integer iaculis sagittis magna eget rhoncus. Etiam sit amet dui eu dolor varius venenatis.
+\section{Initial Models}
+A variety of different methods were used to attempt to predict medical conditions: one-vs-all, K-nearest neighbors, random forest, and a densely connected feedforward neural network. The initial performance is shown in Fig. \ref{fig:perf1}. We experimented with removing age and gender variables from the training data, and training performance improved slightly, as in Fig. \ref{fig:perf2}. An ensemble of random forest classifiers, each predicting for a single medical conditions, performed similarly to the neural network. The neural network gave the best performance, typically with an F1-score between 0.50 and 0.60. However, no sensitive variables were removed when training the neural network.
 
-Vivamus eu nibh auctor, convallis est ornare, posuere turpis. Integer vestibulum consequat justo quis venenatis. Mauris a urna tristique, convallis turpis vel, eleifend dolor. Curabitur accumsan at metus non tempor. Etiam egestas eleifend dui in rhoncus. Fusce ullamcorper sit amet justo ac molestie. Suspendisse placerat ligula eu lorem molestie consequat. Sed sit amet pharetra urna, a vestibulum nisi. Mauris finibus ipsum sit amet magna faucibus, a suscipit massa ultrices. Praesent pretium malesuada felis et gravida. Cras vehicula, nibh et condimentum congue, felis nunc dapibus nisl, accumsan suscipit dolor sapien vel leo. Ut pharetra arcu purus, non imperdiet dui cursus vitae.
+\section{Legal Justification - Test-Aschats}
+
+After reviewing the legal literature and our dataset, we identified and removed sensitive variables. Sensitive variables include the following:
+\begin{itemize}
+\item Race
+\item Country of birth
+\item Language of SP interview
+\item Marital Status
+\end{itemize}
+
+Additionally, variables that were initially classified as sensitive, but were later determined to not be sensitive, are as follows:
+\begin{itemize}
+\item Age in years at screening
+\item Gender of the participant
+\item Citizenship status
+\item Education level
+\item Annual household income
+\end{itemize}
+
+Despite our initial assumptions, age and gender, in the context of medical care and medical costs, are not necessarily protected variables. Referencing the Test-Aschats ruling, Case C-236/09 (Grand Chamber decision), paragraph 12 states the following: \textit{Direct discrimination occurs only when one person is treated less favourably, on grounds of sex, than another person in a comparable situation. Accordingly, for example, differences between men and women in the provision of healthcare services, which result from the physical differences between men and women, do not relate to comparable situations and therefore, do not constitute discrimination.} In this manner, we are free to use age and gender in our models, as it directly influences the nature of medical diagnosis and treatment. 
+
+The Supreme Court of Estonia has held that only arbitrary differential treatment of two persons or groups of persons in essentially similar situations is considered as a violation of the general right to equality. In this manner, Mr. Caduceus does not violate the general right to equality, as it can be argued that predicting medical conditions from a large array of medical data (including laboratory tests) is rational and non-arbitrary.
+
+For General Data Protection Regulation requirements, it is not immediately apparent whether or not this violates the regulation. Participants willingly gave their medical information for this study, and personally identifying information has been removed. Nonetheless, if Mr. Caduceus were implemented by the Finnish government, GDPR requirements would be subject to further debate.
+
+\section{Fairness-Aware Models}
+In the second round of model development, an ensemble of random forests and a feedforward neural network were trained and tested. Removing all sensitive variables, even those that were considered \say{legal} by the legal review, produced reasonable results (see Fig. \ref{fig:fai_rn1} and Fig. \ref{fig:fai_rn2}). 
+
+Without removing sensitive variables, the neural network's F1 performance was as follows:
+\begin{itemize}
+\item min: 0.45
+\item max: 0.51
+\item avg:  0.47
+\end{itemize}
+
+Rsensitive variables, the neural network's F1 performance did not change much:
+\begin{itemize}
+\item min: 0.42
+\item max: 0.50
+\item avg: 0.46
+\end{itemize}
 
 \section{Conclusion}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dapibus aliquet augue nec eleifend. Integer cursus aliquet lectus, non gravida nibh sagittis vitae. Vivamus eget sapien ac leo egestas blandit nec vel nunc. Praesent vestibulum tempor est, sit amet consectetur odio scelerisque sit amet. Etiam rutrum aliquet nunc eu aliquet. Aenean eget ante a massa lacinia maximus vel in turpis. Nulla ultrices turpis in est eleifend placerat. Integer orci purus, molestie eu enim vel, commodo tempus purus. Aliquam erat volutpat. Duis non elit sagittis, elementum ligula et, laoreet sapien. Vivamus nec urna mattis, tincidunt elit quis, eleifend tortor. Vivamus iaculis in ligula ac pulvinar.
+Despite using information for only approximately 3K patients, Mr. Caduceus performed surprisingly well in its prediction task. Due to the sheer number of medically-relevant variables available, removing sensitive variables did not significantly impact model performance. In some instances, such as in age and gender, removing sensitive variables improved the performance of our models. The models could be improved further by using additional years from the NHANES dataset, as this would expand our dataset by several thousand patients per year. 
 
-\bibliographystyle{acm}
-\bibliography{mybib.bib}
+\clearpage
+
+\appendix
+
+\section{Figures}
+ \begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image0copy.png}
+\caption{Example from NHANES data dictionary}
+\label{fig:image_0}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image9.png}
+\caption{Data featurization pipeline: patient diseases}
+\label{fig:image_9}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/data_preprocessing.png}
+\caption{Data featurization pipeline: filtering for patients with complete data}
+\label{fig:data_preprocessing}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image4.png}
+\caption{Most patients had one or more medical condition}
+\label{fig:patient_disease_profile}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image12.png}
+\caption{The most common conditions were chronic ailments}
+\label{fig:common_diseases}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image7.png}
+\caption{The most common patient type is female, over the age of 60}
+\label{fig:age}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image10.png}
+\caption{The frequency of the most common diseases over time}
+\label{fig:age_disease}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image1.png}
+\caption{Initial model performance wasn't very good}
+\label{fig:perf1}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image8.png}
+\caption{Neural Network gave the best performance}
+\label{fig:perf2}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image11.png}
+\caption{Fairness Aware Random Forest Performance 1}
+\label{fig:fai_rn1}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth,keepaspectratio]{figs/image2.png}
+\caption{Fairness Aware Random Forest Performance 2}
+\label{fig:fai_rn2}
+\centering
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.4,keepaspectratio]{figs/nn.jpg}
+\caption{Neural Network Architecture}
+\label{fig:nn_arch}
+\end{figure}
+
+
 
 \end{document}
